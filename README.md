@@ -1,52 +1,63 @@
-# TMOHS1 Root Utility
+# HEX9207
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 ## Description
 
-An interactive python script that enables root access on the T-Mobile (Wingtech) TMOHS1, as well as providing several useful utilites to change the configuration of the device.
+A Python script that enables root access on the T-Mobile (Wingtech) TMOHS1 (MDM9207) and replaces the stock firmware interface. 
 
-## Features
+This is a fork of the original TMOHS1-Root-Utility. It expands on the original exploit by stripping the default carrier UI, replacing it with a custom web panel, and integrating local network management tools. Major major credit to them.
+
+## New in This Fork
+
+- **Custom Web Panel:** Replaces the stock T-Mobile web interface.
+- **Web Shell:** Integrated root shell accessible directly through the web panel.
+- **`dnsmasq` Support:** Manage custom DNS and DHCP directly from the interface.
+- **Root Password Patch:** Fixed the upstream bug to allow persistent root password updates.
+
+## Core Features
 
 - Root shell via telnet
-- Temporarily or pesistently enable ADB
+- Temporarily or persistently enable ADB
 - Disable OMA-DM update bootstrap
 - On-device root FTP server to browse the filesystem
-- Mood lighting
-- Mask data that would normally be counted against your hotspot quota as "on-client-device" data
+- Mood lighting control
+- Mask hotspot data as "on-client-device" data (TTL modification)
 
 ## What it doesn't (yet?) feature
 
 - SIM unlock :(
 - SSH server installation
-- Other USB modes (though if you edit `utils.py` you can easily implement this)
+- Other USB modes (can be implemented by editing `utils.py`)
 
 ## Setup
 
-Ensure you have Python >= 3.6 and pip installed then run:
+Requires Python >= 3.6 and pip.
 
 ```bash
 pip install -r requirements.txt
-```
 
-Or install the required libraries manually.
+```
 
 ## Usage
 
-Connect to your hotspot's network via USB tethering (recommended) or WiFi, then run:
+Connect to the hotspot via USB tethering (recommended) or WiFi, then run:
 
 ```sh
 python ./rootScript.py
+
 ```
-Or for verbose/debug output:
+
+For verbose output:
+
 ```sh
 python ./rootScript.py -v
+
 ```
 
-### **Notes**
+### Notes
 
-- The script has been tested to work on Windows 10 & 11, EndeavorOS Linux, and MacOS 13 Ventura
-- Script assumes your hotspot's IP is 192.168.0.1
-- Script assumes you have set a **custom** weblogin password, i.e. you have changed it from the default AdminXXXX
-- For the sake of your own experimentation, the script leaves an unauthenticated root FTP server running on the device *but only once you enable it*. When you are done browsing the filesystem, be sure to manually close it by running `killall tcpsvd` on the TMOHS1 as root, or simply reboot the device.
-- You can build custom binaries to run on the rooted device as well as a portable cross-SDK with [this custom Buildroot fork](https://github.com/c-herz/tmohs-buildroot). Note that this is very experimental, and I cannot guarantee it will build/run properly, however.
+* Tested on Windows 10 & 11
+* Assumes the hotspot IP is `192.168.0.1`.
+* **Security:** The script leaves an unauthenticated root FTP server running on the device *only if you enable it*. Close it when finished by running `killall tcpsvd` as root, or reboot the device.
+* You can build custom binaries and a portable cross-SDK using [this custom Buildroot fork](https://github.com/c-herz/tmohs-buildroot). Note: This is experimental.
